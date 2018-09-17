@@ -35,8 +35,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //For Dates to be calculated
 
-   private String myDate1, myDate2;
-
     private DatePickerDialog.OnDateSetListener
             mySetDateListener2 = new DatePickerDialog.OnDateSetListener() {
         @Override
@@ -141,9 +139,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         yearDisplay.setText(yearFormat.format(myCalendar.getTime()));
         yearDisplay2.setText(yearFormat.format(myCalendar2.getTime()));
 
-        myDate1 = dateTimeFormat.format(myCalendar.getTime());
-        myDate2 = dateTimeFormat.format(myCalendar2.getTime());
-
     }
 
 
@@ -184,56 +179,50 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void getDateDistance(Calendar date1, Calendar date2){
 
-        int diff_year;
-        int diff_month;
-        int diff_day;
-        int diff_Hour;
-        int diff_Min;
-        int months;
+        int diffYear, diffMonth, diffDay, diffHour, diffMin, months;
 
         if(date1.get(Calendar.YEAR) > date2.get(Calendar.YEAR)){
 
             if(date1.get(Calendar.MONTH) < date2.get(Calendar.MONTH)){
 
-                diff_month = 12 - (date2.get(Calendar.MONTH) - date1.get(Calendar.MONTH));
+                diffMonth = 12 - (date2.get(Calendar.MONTH) - date1.get(Calendar.MONTH));
             }
             else {
-                diff_month = date1.get(Calendar.MONTH) - date2.get(Calendar.MONTH);
+                diffMonth = date1.get(Calendar.MONTH) - date2.get(Calendar.MONTH);
             }
 
-             diff_year = date1.get(Calendar.YEAR) - date2.get(Calendar.YEAR);
-             diff_day = ((int) Math.sqrt(Math.pow(date1.get(Calendar.DAY_OF_MONTH) - date2.get(Calendar.DAY_OF_MONTH),2)));
-             diff_Hour = ((int) Math.sqrt(Math.pow(date1.get(Calendar.HOUR_OF_DAY) - date2.get(Calendar.HOUR_OF_DAY),2)));
-             diff_Min = ((int) Math.sqrt(Math.pow(date1.get(Calendar.MINUTE) - date2.get(Calendar.MINUTE),2)));
+             diffYear = date1.get(Calendar.YEAR) - date2.get(Calendar.YEAR);
+             diffDay = ((int) Math.sqrt(Math.pow(date1.get(Calendar.DAY_OF_MONTH) - date2.get(Calendar.DAY_OF_MONTH),2)));
+             diffHour = ((int) Math.sqrt(Math.pow(date1.get(Calendar.HOUR_OF_DAY) - date2.get(Calendar.HOUR_OF_DAY),2)));
+             diffMin = ((int) Math.sqrt(Math.pow(date1.get(Calendar.MINUTE) - date2.get(Calendar.MINUTE),2)));
              months = date1.get(Calendar.MONTH) - date2.get(Calendar.MONTH);
 
         }
         else {
             if(date2.get(Calendar.MONTH) < date1.get(Calendar.MONTH)){
 
-                diff_month = 12- (date1.get(Calendar.MONTH) - date2.get(Calendar.MONTH));
+                diffMonth = 12- (date1.get(Calendar.MONTH) - date2.get(Calendar.MONTH));
             }
             else {
-                diff_month = date2.get(Calendar.MONTH) - date1.get(Calendar.MONTH);
+                diffMonth = date2.get(Calendar.MONTH) - date1.get(Calendar.MONTH);
             }
-             diff_year = date2.get(Calendar.YEAR) - date1.get(Calendar.YEAR);
-             diff_day = ((int) Math.sqrt(Math.pow(date2.get(Calendar.DAY_OF_MONTH) - date1.get(Calendar.DAY_OF_MONTH),2)));
-             diff_Hour = ((int) Math.sqrt(Math.pow(date2.get(Calendar.HOUR_OF_DAY) - date1.get(Calendar.HOUR_OF_DAY),2)));
-             diff_Min = ((int) Math.sqrt(Math.pow(date2.get(Calendar.MINUTE) - date1.get(Calendar.MINUTE),2)));
+             diffYear = date2.get(Calendar.YEAR) - date1.get(Calendar.YEAR);
+             diffDay = ((int) Math.sqrt(Math.pow(date2.get(Calendar.DAY_OF_MONTH) - date1.get(Calendar.DAY_OF_MONTH),2)));
+             diffHour = ((int) Math.sqrt(Math.pow(date2.get(Calendar.HOUR_OF_DAY) - date1.get(Calendar.HOUR_OF_DAY),2)));
+             diffMin = ((int) Math.sqrt(Math.pow(date2.get(Calendar.MINUTE) - date1.get(Calendar.MINUTE),2)));
             months = date2.get(Calendar.MONTH) - date1.get(Calendar.MONTH);
 
         }
 
-        if (months < 0 || (months == 0 && diff_day < 0)) {
-            if(diff_year >0){
+        if (months < 0 || (months == 0 && diffDay < 0)) {
+            if(diffYear >0){
 
-                diff_year--;
+                diffYear--;
             }
-
 
         }
 
-        printResult(diff_year, diff_month, diff_day, diff_Hour,diff_Min);
+        printResult(diffYear, diffMonth, diffDay, diffHour,diffMin);
 
     }
 
@@ -242,7 +231,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         TextView dateResult = findViewById(R.id.txt_DateResult);
         TextView timeResult = findViewById(R.id.txt_TimeResult);
-
 
         dateResult.setText(Integer.toString(years)
                 .concat(" Years, ")
