@@ -27,51 +27,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             R.id.txt_Time2, R.id.txt_Date1, R.id.txt_Date2, R.id.txt_Time1
     };
 
-    private TextView dateDisplay, dateDisplay2, timeDisplay,timeDisplay2, yearDisplay, yearDisplay2;
-    private DatePickerDialog myDatePicker, myDatePicker2;
-    private TimePickerDialog myTimePicker, myTimePicker2;
+    private TextView dateDisplay, dateDisplay2, timeDisplay,timeDisplay2, yearDisplay, yearDisplay2, dateResult, timeResult;
+    private DatePickerDialog  myDatePicker, myDatePicker2;
+    private TimePickerDialog  myTimePicker, myTimePicker2;
     private Calendar myCalendar, myCalendar2;
-    private SimpleDateFormat timeFormat, dateFormat, yearFormat, dateTimeFormat;
+
+    //My own class declaration
+    private  DateTimeTools myDateTimeTools, myDateTimeTools2;
 
     //For Dates to be calculated
 
-    private DatePickerDialog.OnDateSetListener
-            mySetDateListener2 = new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            myCalendar2.set(Calendar.YEAR, year);
-            myCalendar2.set(Calendar.MONTH, month);
-            myCalendar2.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-           refreshDisplay();
-        }};
-
-    private DatePickerDialog.OnDateSetListener
-            mySetDateListener = new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            myCalendar.set(Calendar.YEAR, year);
-            myCalendar.set(Calendar.MONTH, month);
-            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            refreshDisplay();
-        }};
-
-    private  TimePickerDialog.OnTimeSetListener
-            mySetTimeListener = new TimePickerDialog.OnTimeSetListener() {
-        @Override
-        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            myCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-            myCalendar.set(Calendar.MINUTE, minute);
-            refreshDisplay();
-        }};
-
-    private  TimePickerDialog.OnTimeSetListener
-            mySetTimeListener2 = new TimePickerDialog.OnTimeSetListener() {
-        @Override
-        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            myCalendar2.set(Calendar.HOUR_OF_DAY, hourOfDay);
-            myCalendar2.set(Calendar.MINUTE, minute);
-            refreshDisplay();
-        }};
 
 
     @Override
@@ -79,42 +44,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setLogo(R.mipmap.calendar_icon);
-        getSupportActionBar().setDisplayUseLogoEnabled(true);
-        getSupportActionBar().setTitle("DateTime Calculator");
+        try {
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setLogo(R.mipmap.calendar_icon);
+            getSupportActionBar().setDisplayUseLogoEnabled(true);
+            getSupportActionBar().setTitle("DateTime Calculator");
 
-        myCalendar = Calendar.getInstance();
-        myCalendar2 = Calendar.getInstance();
+        }catch (Exception e){
 
-        myDatePicker = new DatePickerDialog(this,
-                mySetDateListener,
-                myCalendar.get(Calendar.DAY_OF_MONTH),
-                myCalendar.get(Calendar.MONTH),
-                myCalendar.get(Calendar.YEAR));
+            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+        }
 
-        myTimePicker = new TimePickerDialog(this,
-                mySetTimeListener,
-                myCalendar.get(Calendar.HOUR_OF_DAY),
-                myCalendar.get(Calendar.MINUTE),
-                false);
 
-        myDatePicker2 = new DatePickerDialog(this,
-                mySetDateListener2,
-                myCalendar2.get(Calendar.DAY_OF_MONTH),
-                myCalendar2.get(Calendar.MONTH),
-                myCalendar2.get(Calendar.YEAR));
+        myDateTimeTools = new DateTimeTools();
+        myDateTimeTools2 = new DateTimeTools();
 
-        myTimePicker2 = new TimePickerDialog(this,
-                mySetTimeListener2,
-                myCalendar2.get(Calendar.HOUR_OF_DAY),
-                myCalendar2.get(Calendar.MINUTE),
-                false);
+        myCalendar =  myDateTimeTools.getMyCalendar();
+        myCalendar2 =  myDateTimeTools2.getMyCalendar();
 
-        timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
-        dateFormat = new SimpleDateFormat("MMMM/dd" , Locale.getDefault());
-        yearFormat = new SimpleDateFormat("YYYY", Locale.getDefault());
-        dateTimeFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm a", Locale.getDefault());
+        myDatePicker = myDateTimeTools.getMyDatePicker(this);
+        myDatePicker2 = myDateTimeTools2.getMyDatePicker(this);
+
+        myTimePicker = myDateTimeTools.getMyTimePicker(this);
+        myTimePicker2 = myDateTimeTools2.getMyTimePicker(this);
+
+
+        dateResult = findViewById(R.id.txt_DateResult);
+        timeResult = findViewById(R.id.txt_TimeResult);
 
         dateDisplay = findViewById(R.id.txt_Date1);
         dateDisplay2 = findViewById(R.id.txt_Date2);
@@ -127,17 +83,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             findViewById(id).setOnClickListener(this);
 
         refreshDisplay();
-
     }
 
-    private void refreshDisplay(){
+    public void refreshDisplay(){
 
-        dateDisplay.setText(dateFormat.format(myCalendar.getTime()));
-        dateDisplay2.setText(dateFormat.format(myCalendar2.getTime()));
-        timeDisplay.setText(timeFormat.format(myCalendar.getTime()));
-        timeDisplay2.setText(timeFormat.format(myCalendar2.getTime()));
-        yearDisplay.setText(yearFormat.format(myCalendar.getTime()));
-        yearDisplay2.setText(yearFormat.format(myCalendar2.getTime()));
+        dateDisplay.setText(myDateTimeTools.getDateFormat().format(myCalendar.getTime()));
+        dateDisplay2.setText(myDateTimeTools.getDateFormat().format(myCalendar2.getTime()));
+        timeDisplay.setText(myDateTimeTools.getTimeFormat().format(myCalendar.getTime()));
+        timeDisplay2.setText(myDateTimeTools.getTimeFormat().format(myCalendar2.getTime()));
+        yearDisplay.setText(myDateTimeTools.getYearFormat().format(myCalendar.getTime()));
+        yearDisplay2.setText(myDateTimeTools.getYearFormat().format(myCalendar2.getTime()));
 
     }
 
@@ -149,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.btn_ok_1:
                 myDatePicker.show();
-                return;
+                break;
 
             case R.id.txt_Date1:
                 myDatePicker.show();
@@ -171,79 +126,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.btn_Calcular:
-               getDateDistance(myCalendar,myCalendar2);
+               myDateTimeTools.getDateDistance(myCalendar,myCalendar2);
+               myDateTimeTools.printResult(dateResult, timeResult);
                 break;
         }
-
-    }
-
-    public void getDateDistance(Calendar date1, Calendar date2){
-
-        int diffYear, diffMonth, diffDay, diffHour, diffMin, months;
-
-        if(date1.get(Calendar.YEAR) > date2.get(Calendar.YEAR)){
-
-            if(date1.get(Calendar.MONTH) < date2.get(Calendar.MONTH)){
-
-                diffMonth = 12 - (date2.get(Calendar.MONTH) - date1.get(Calendar.MONTH));
-            }
-            else {
-                diffMonth = date1.get(Calendar.MONTH) - date2.get(Calendar.MONTH);
-            }
-
-             diffYear = date1.get(Calendar.YEAR) - date2.get(Calendar.YEAR);
-             diffDay = ((int) Math.sqrt(Math.pow(date1.get(Calendar.DAY_OF_MONTH) - date2.get(Calendar.DAY_OF_MONTH),2)));
-             diffHour = ((int) Math.sqrt(Math.pow(date1.get(Calendar.HOUR_OF_DAY) - date2.get(Calendar.HOUR_OF_DAY),2)));
-             diffMin = ((int) Math.sqrt(Math.pow(date1.get(Calendar.MINUTE) - date2.get(Calendar.MINUTE),2)));
-             months = date1.get(Calendar.MONTH) - date2.get(Calendar.MONTH);
-
-        }
-        else {
-            if(date2.get(Calendar.MONTH) < date1.get(Calendar.MONTH)){
-
-                diffMonth = 12- (date1.get(Calendar.MONTH) - date2.get(Calendar.MONTH));
-            }
-            else {
-                diffMonth = date2.get(Calendar.MONTH) - date1.get(Calendar.MONTH);
-            }
-             diffYear = date2.get(Calendar.YEAR) - date1.get(Calendar.YEAR);
-             diffDay = ((int) Math.sqrt(Math.pow(date2.get(Calendar.DAY_OF_MONTH) - date1.get(Calendar.DAY_OF_MONTH),2)));
-             diffHour = ((int) Math.sqrt(Math.pow(date2.get(Calendar.HOUR_OF_DAY) - date1.get(Calendar.HOUR_OF_DAY),2)));
-             diffMin = ((int) Math.sqrt(Math.pow(date2.get(Calendar.MINUTE) - date1.get(Calendar.MINUTE),2)));
-            months = date2.get(Calendar.MONTH) - date1.get(Calendar.MONTH);
-
-        }
-
-        if (months < 0 || (months == 0 && diffDay < 0)) {
-            if(diffYear >0){
-
-                diffYear--;
-            }
-
-        }
-
-        printResult(diffYear, diffMonth, diffDay, diffHour,diffMin);
-
+        refreshDisplay();
     }
 
 
-    private void printResult(int years, int months, int days, int hours, int mins){
-
-        TextView dateResult = findViewById(R.id.txt_DateResult);
-        TextView timeResult = findViewById(R.id.txt_TimeResult);
-
-        dateResult.setText(Integer.toString(years)
-                .concat(" Years, ")
-                .concat(Integer.toString(months))
-                .concat(" Months, ")
-                .concat(Integer.toString(days))
-                .concat(" Days "));
-
-        timeResult.setText(
-                Integer.toString(hours)
-                .concat(" Hours ")
-                .concat(Integer.toString(mins))
-                .concat(" Minutes "));
-
-    }
 }
